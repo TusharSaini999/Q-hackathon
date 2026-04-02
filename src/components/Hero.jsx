@@ -5,7 +5,7 @@ import robot from "../assets/hero-robo.svg";
 
 const Hero = () => {
   const calculateTimeLeft = () => {
-    const countDate = new Date("April 24, 2026 09:00:00").getTime();
+    const countDate = new Date("May 1, 2026 09:00:00").getTime();
     const gap = countDate - Date.now();
     if (gap <= 0) return null;
     const s = 1000, m = s * 60, h = m * 60, d = h * 24;
@@ -139,12 +139,12 @@ const Hero = () => {
             style={{ color: "var(--text-dark)" }}
             variants={itemVariants}
           >
-            24–25 April 2026 &bull; Quantum University
+            1-2 May 2026 &bull; Quantum University
           </motion.p>
 
           {/*buttons*/}
           <motion.div className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 mb-6 sm:mb-10 w-full sm:w-auto" variants={itemVariants}>
-            <a href="https://bit.ly/4st6atF" className="w-full sm:w-auto">
+            <a href="https://unstop.com/p/qhackathon-2026-quantum-university-roorkee-1663126" className="w-full sm:w-auto">
               <motion.button
                 className="w-full font-bold text-sm px-5 sm:px-8 py-2.5 sm:py-3.5 rounded-(--radius) border-none cursor-pointer"
                 style={{
