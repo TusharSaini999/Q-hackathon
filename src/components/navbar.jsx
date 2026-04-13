@@ -217,7 +217,7 @@ function Navbar() {
     <>
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
-          scrolled || !isHomePage
+          scrolled
             ? "bg-white/70 backdrop-blur-xl border-b border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.05)] py-3" 
             : "bg-transparent py-5"
         }`}
