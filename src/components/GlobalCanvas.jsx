@@ -1,9 +1,10 @@
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Center, Float } from "@react-three/drei";
 import { SVGLoader } from "three-stdlib";
 import { useScroll, useTransform, useSpring } from "framer-motion";
+
 const CinematicBokeh = ({ scrollOpacity }) => {
   const bokehTexture = useMemo(() => {
     const canvas = document.createElement("canvas");
@@ -59,25 +60,36 @@ const CinematicBokeh = ({ scrollOpacity }) => {
 };
 
 const TravelingLogo = ({ smoothProgress }) => {
+  const { viewport } = useThree();
+  const isMobile = viewport.width < 5; 
+
   const logoPath = import.meta.env.BASE_URL + 'qu-logo.svg';
   const svg = useLoader(SVGLoader, logoPath);
   const shapes = useMemo(() => svg.paths.flatMap(p => p.toShapes(true)), [svg]);
-  const xPosition = useTransform(smoothProgress, [0, 0.25, 0.5, 0.75, 1], [-1.4, 3.5, -2.5, 3.5, -2.5]);
+  const maxOffset = viewport.width * 0.35; 
+  const rightX = maxOffset;
+  const leftX = -maxOffset;
+  const xPosition = useTransform(smoothProgress, [0, 0.25, 0.5, 0.75, 1], [-1.4, rightX, leftX, rightX, leftX]);
   const yRotation = useTransform(smoothProgress, [0, 0.25, 0.5, 0.75, 1], [0, Math.PI * 2, Math.PI * 4, Math.PI * 6, Math.PI * 8]);
 
   const groupRef = useRef();
 
   useFrame(() => {
     if (groupRef.current) {
-      groupRef.current.position.x = xPosition.get();
-      groupRef.current.rotation.y = yRotation.get();
+      if (isMobile) {
+        groupRef.current.position.x = 0;
+        groupRef.current.rotation.y = 0;
+      } else {
+        groupRef.current.position.x = xPosition.get();
+        groupRef.current.rotation.y = yRotation.get();
+      }
     }
   });
 
   return (
     <group ref={groupRef}>
       <Float speed={2.5} rotationIntensity={0.2} floatIntensity={1.5}>
-        <Center scale={0.015}>
+        <Center scale={isMobile ? 0.008 : 0.015}>
           <group rotation={[Math.PI, 0, 0]}>
             {shapes.map((shape, index) => (
               <mesh 
