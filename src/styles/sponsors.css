@@ -14,9 +14,9 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(900px 520px at 85% 8%, rgba(229, 26, 128, 0.12), transparent 70%),
-    radial-gradient(800px 420px at 10% 70%, rgba(140, 46, 124, 0.14), transparent 72%),
-    linear-gradient(180deg, #090909 0%, #060606 48%, #050505 100%);
+    radial-gradient(900px 520px at 85% 8%, var(--bg-orb-1), transparent 70%),
+    radial-gradient(800px 420px at 10% 70%, var(--bg-orb-2), transparent 72%),
+    linear-gradient(180deg, var(--bg-base-1) 0%, var(--bg-base-2) 48%, var(--bg-base-2) 100%);
 }
 
 .sponsors-page > * {

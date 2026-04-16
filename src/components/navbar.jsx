@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import logo from "/logo.svg";
+import ThemeToggle from "./ThemeToggle";
 
 const homeNavLinks = [
   { label: "Home", section: "home" },
@@ -52,7 +53,6 @@ function Navbar() {
   const clickScrollUnlockTimer = useRef(null);
   const clickTargetSection = useRef(null);
   const routeScrollRetryTimer = useRef(null);
-  
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
@@ -60,7 +60,6 @@ function Navbar() {
   const isSectionPage = isHomePage || isSponsorsPage;
   const currentNavLinks = isSponsorsPage ? sponsorNavLinks : homeNavLinks;
   const activeSection = isSponsorsPage ? activeSections.sponsors : activeSections.home;
-
   const setPageActiveSection = useCallback((path, sectionId) => {
     const pageKey = path === "/sponsors" ? "sponsors" : "home";
     setActiveSections((prev) => {
@@ -120,7 +119,6 @@ function Navbar() {
       const scrollMarker = window.scrollY + 160;
       const sectionIds = currentNavLinks.map(({ section }) => section);
       let currentSection = sectionIds[0];
-
       for (const sectionId of sectionIds) {
         if (sectionId === sectionIds[0]) continue;
         const section = document.getElementById(sectionId);
@@ -128,14 +126,11 @@ function Navbar() {
           currentSection = sectionId;
         }
       }
-
       const viewportBottom = window.scrollY + window.innerHeight;
       const docHeight = document.documentElement.scrollHeight;
       if (viewportBottom >= docHeight - 2) {
         currentSection = sectionIds[sectionIds.length - 1];
       }
-
-      // If the last section enters the viewport (even if its top cannot reach marker), keep it active.
       const lastSectionId = sectionIds[sectionIds.length - 1];
       const lastSectionEl = document.getElementById(lastSectionId);
       if (lastSectionEl) {
@@ -320,6 +315,9 @@ function Navbar() {
                 Sponsors
               </Link>
             )}
+            
+            <ThemeToggle />
+            
             <a
               href="https://unstop.com/p/qhackathon-2026-quantum-university-roorkee-1663126"
               target="_blank"
@@ -330,22 +328,24 @@ function Navbar() {
             </a>
           </div>
 
-          {/*mobile menu */}
-          <button
-            className="md:hidden relative z-70 p-2"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-          >
-            {menuOpen ? (
-              <X size={24} className="text-(--text-light) drop-shadow" strokeWidth={2.5} />
-            ) : (
-              <Menu size={24} className="text-(--primary) drop-shadow" strokeWidth={2.5} />
-            )}
-          </button>
+          <div className="md:hidden flex items-center gap-2 relative z-70">
+            <ThemeToggle />
+            
+            <button
+              className="p-2"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+            >
+              {menuOpen ? (
+                <X size={24} className="text-(--text-light) drop-shadow" strokeWidth={2.5} />
+              ) : (
+                <Menu size={24} className="text-(--primary) drop-shadow" strokeWidth={2.5} />
+              )}
+            </button>
+          </div>
 
         </div>
       </header>
-
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {menuOpen && (

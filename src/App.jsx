@@ -88,9 +88,9 @@ function AppContent() {
   const showGlobalCanvas = pathname === "/";
 
   return (
-    <div className="relative min-h-screen bg-[#050505] font-sans">
+    <div className="relative min-h-screen bg-[var(--bg-page)] font-sans">
       {showGlobalCanvas ? (
-        <Suspense fallback={<div className="absolute inset-0 bg-[#050505] -z-20" />}>
+        <Suspense fallback={<div className="absolute inset-0 bg-[var(--bg-page)] -z-20" />}>
           <GlobalCanvas />
         </Suspense>
       ) : null}

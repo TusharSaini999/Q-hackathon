@@ -57,6 +57,16 @@
         img-src     'self' data: blob: https:;
         connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com;
       " />
+  <script>
+  (function() {
+    try {
+      var theme = localStorage.getItem('theme');
+      var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) document.documentElement.classList.add('dark');
+    } catch (e) {}
+  })();
+</script>
+
 </head>
 
 <body>
