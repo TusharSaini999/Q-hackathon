@@ -11,7 +11,7 @@ const events = [
     title: "Registration Opens",
     description: "Secure your spot and start forming your dream team.",
     instructions: [
-      "Register individually or as a team of 2-4 members.",
+      "Register individually or as a team of 4-6 members.",
       "Finalize tech stack and brainstorm core problem statements.",
       "Early preparation is encouraged for a smoother dev phase."
     ],
@@ -34,8 +34,7 @@ const events = [
     description: "Keynote speeches, track reveals, and the 36-hour hack begins!",
     instructions: [
       "Welcome address and keynote sessions.",
-      "Hackathon rules and judging criteria explained.",
-      "Problem tracks officially revealed — Timer starts!"
+      "Hackathon rules and judging criteria explained."
     ],
     Icon: PartyPopper,
   },
