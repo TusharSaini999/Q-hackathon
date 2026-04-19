@@ -54,6 +54,10 @@
   --border: var(--neutral-200);
   --border-soft: rgba(255, 255, 255, 0.14);
 
+  --text-heading: #ffffff;
+  --footer-icon-bg: rgba(255, 255, 255, 0.07);
+  --footer-icon-border: rgba(255, 255, 255, 0.14);
+
   --success: #22c55e;
   --warning: #f59e0b;
   --danger: #ef4444;
@@ -134,6 +138,10 @@ html.light {
 
   --border: #d8dceb;
   --border-soft: rgba(11, 17, 32, 0.18);
+
+  --text-heading: #141522;
+  --footer-icon-bg: rgba(11, 17, 32, 0.08);
+  --footer-icon-border: rgba(11, 17, 32, 0.2);
 
   --bg-orb-1: rgba(229, 26, 128, 0.13);
   --bg-orb-2: rgba(140, 46, 124, 0.1);
