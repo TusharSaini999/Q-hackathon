@@ -4,6 +4,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Sparkles, Float } from "@react-three/drei";
 import { usePerformanceMode } from "../utils/usePerformanceMode";
+import { useTheme } from "../context/ThemeContext";
 const tiers = [
   {
     name: "Platinum",
@@ -11,7 +12,7 @@ const tiers = [
     badge: "MOST IMPACT",
     color: "#e51a80",
     glow: "rgba(229, 26, 128, 0.2)",
-    scale: "scale-105 z-20", 
+    scale: "scale-105 z-20",
     features: [
       "Largest logo on homepage",
       "Main stage backdrop branding",
@@ -46,8 +47,10 @@ const tiers = [
   {
     name: "Silver",
     price: "₹15,000 – ₹25,000",
-    color: "#e5e7eb", 
+    color: "#e5e7eb",
+    lightColor: "#6b7280",
     glow: "rgba(255, 255, 255, 0.05)",
+    lightGlow: "rgba(107, 114, 128, 0.18)",
     scale: "scale-95 z-0 opacity-90 hover:opacity-100",
     features: [
       "Logo on website & banners",
@@ -62,7 +65,7 @@ const tiers = [
   {
     name: "Bronze",
     price: "₹5,000 – ₹10,000",
-    color: "#d97706", 
+    color: "#d97706",
     glow: "rgba(217, 119, 6, 0.05)",
     scale: "scale-95 z-0 opacity-90 hover:opacity-100",
     features: [
@@ -100,9 +103,13 @@ const BackgroundNetwork = () => {
     </group>
   );
 };
-const TierCard = ({ tier, index }) => {
+const TierCard = ({ tier, index, isLight }) => {
   const isPlatinum = tier.name === "Platinum";
-  
+
+  // Resolve theme-aware color/glow for tiers that need light-mode overrides (Silver)
+  const resolvedColor = isLight && tier.lightColor ? tier.lightColor : tier.color;
+  const resolvedGlow = isLight && tier.lightGlow ? tier.lightGlow : tier.glow;
+
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const mouseXSpring = useSpring(x, { stiffness: 150, damping: 15 });
@@ -130,18 +137,18 @@ const TierCard = ({ tier, index }) => {
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         className="relative w-full flex flex-col h-full bg-(--bg-card-dark) rounded-2xl border border-(--border-soft) p-8 shadow-2xl group transition-colors duration-300"
       >
-        <div 
+        <div
           className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none blur-xl"
-          style={{ background: `radial-gradient(circle at top, ${tier.glow} 0%, transparent 70%)` }}
+          style={{ background: `radial-gradient(circle at top, ${resolvedGlow} 0%, transparent 70%)` }}
         />
-        <div 
-          className="absolute top-0 inset-x-0 h-1.5 rounded-t-2xl opacity-80 group-hover:opacity-100 transition-opacity" 
-          style={{ background: tier.color, boxShadow: `0 0 15px ${tier.color}` }} 
+        <div
+          className="absolute top-0 inset-x-0 h-1.5 rounded-t-2xl opacity-80 group-hover:opacity-100 transition-opacity"
+          style={{ background: resolvedColor, boxShadow: `0 0 15px ${resolvedColor}` }}
         />
         <div style={{ transform: "translateZ(30px)" }} className="flex flex-col h-full relative z-10">
-             {tier.badge && (
+          {tier.badge && (
             <div className="absolute -top-12 left-1/2 -translate-x-1/2">
-              <span 
+              <span
                 className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-b-lg text-(--text-inverse) shadow-lg"
                 style={{ background: tier.color }}
               >
@@ -152,7 +159,7 @@ const TierCard = ({ tier, index }) => {
           <h3 className="text-3xl font-black text-(--text-light) text-center tracking-tight mb-2">
             {tier.name}
           </h3>
-          <p className="text-sm font-bold text-center tracking-widest mb-8" style={{ color: tier.color }}>
+          <p className="text-sm font-bold text-center tracking-widest mb-8" style={{ color: resolvedColor }}>
             {tier.price}
           </p>
 
@@ -162,7 +169,7 @@ const TierCard = ({ tier, index }) => {
             {tier.features.map((feature, i) => (
               <li key={i} className="flex items-start gap-3 text-sm text-(--text-muted) font-medium leading-snug">
                 <div className="mt-0.5 shrink-0">
-                  <Check size={16} style={{ color: tier.color }} strokeWidth={3} />
+                  <Check size={16} style={{ color: resolvedColor }} strokeWidth={3} />
                 </div>
                 {feature}
               </li>
@@ -175,15 +182,15 @@ const TierCard = ({ tier, index }) => {
             target="_blank"
             rel="noreferrer"
             className={`btn-ui mt-auto w-full py-3.5 rounded-xl text-sm text-center ${isPlatinum ? "btn-ui-primary" : "btn-ui-outline"}`}
-            style={{ 
-              borderColor: isPlatinum ? tier.color : 'var(--border-soft)',
-              background: isPlatinum ? tier.color : 'var(--btn-outline-bg)',
+            style={{
+              borderColor: isPlatinum ? resolvedColor : 'var(--border-soft)',
+              background: isPlatinum ? resolvedColor : 'var(--btn-outline-bg)',
               color: isPlatinum ? 'var(--text-inverse)' : 'var(--btn-outline-text)'
             }}
             onMouseEnter={(e) => {
               if (!isPlatinum) {
-                e.currentTarget.style.borderColor = tier.color;
-                e.currentTarget.style.color = tier.color;
+                e.currentTarget.style.borderColor = resolvedColor;
+                e.currentTarget.style.color = resolvedColor;
                 e.currentTarget.style.background = "var(--btn-outline-hover-bg)";
               }
             }}
@@ -204,10 +211,12 @@ const TierCard = ({ tier, index }) => {
 };
 const SponsorshipTiers = () => {
   const { shouldReduceMotion } = usePerformanceMode();
+  const { theme } = useTheme();
+  const isLight = theme === "light";
 
   return (
     <section id="sponsorship-tiers" className="relative py-24 sm:py-32 px-4 sm:px-6 bg-(--bg-page-elevated) overflow-hidden">
-      
+
       {/*background canvas */}
       {shouldReduceMotion ? (
         <div className="absolute inset-0 z-0 pointer-events-none opacity-60 bg-[radial-gradient(circle_at_20%_20%,var(--primary-soft)_0%,transparent_45%),radial-gradient(circle_at_80%_25%,rgba(245,196,0,0.12)_0%,transparent_40%)]" />
@@ -224,7 +233,7 @@ const SponsorshipTiers = () => {
       )}
 
       <div className="relative z-10 max-w-7xl mx-auto">
-        
+
         {/*header*/}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -242,7 +251,7 @@ const SponsorshipTiers = () => {
         {/*tier grids*/}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-center">
           {tiers.map((tier, i) => (
-            <TierCard key={tier.name} tier={tier} index={i} />
+            <TierCard key={tier.name} tier={tier} index={i} isLight={isLight} />
           ))}
         </div>
 
