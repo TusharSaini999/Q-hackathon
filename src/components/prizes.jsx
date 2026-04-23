@@ -6,7 +6,7 @@ const prizes = [
     tier: "gold",
     Icon: Trophy,
     label: "Winner",
-    amount: "Cash Prize",
+    amount: "₹15,000",
     perks: ["Premium Goodies", "Special Recognition"],
     accentColor: "#f5c400",
     bgGradient: "linear-gradient(135deg, #1a1500 0%, #332700 100%)",
@@ -17,7 +17,7 @@ const prizes = [
     tier: "silver",
     Icon: Medal,
     label: "1st Runner-Up",
-    amount: "Cash Prize",
+    amount: "₹10,000",
     perks: ["Exclusive Goodies", "Merit Certificate"],
     accentColor: "#e5e7eb",
     bgGradient: "linear-gradient(135deg, #111111 0%, #222222 100%)",
@@ -28,7 +28,7 @@ const prizes = [
     tier: "bronze",
     Icon: Award,
     label: "2nd Runner-Up",
-    amount: "Cash Prize",
+    amount: "₹5,000",
     perks: ["Swag Kits", "Merit Certificate"],
     accentColor: "#d97706", 
     bgGradient: "linear-gradient(135deg, #1a0f00 0%, #2a1800 100%)",
@@ -41,8 +41,14 @@ const generalPerks = [
   {
     Icon: Globe,
     title: "1-Year .xyz Domain",
-    desc: "Worth ₹1L+ for all participants",
+    desc: "Worth ₹1L+ for selected participants",
     color: "#3b82f6"
+  },
+  {
+    Icon: Star,
+    title: "Three CodeChef Pro Subscriptions",
+    desc: "One each to a selected student from each of the top 3 teams",
+    color: "#10b981"
   },
   {
     Icon: Gift,

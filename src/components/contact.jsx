@@ -82,7 +82,7 @@ const InfoCard = () => (
           <MapPin size={14} style={{ color: "var(--primary)" }} /> Address
         </span>
         <p className={infoValueClass}>
-          Computer Science Dept, Tech Institute Main Campus
+          Quantum University, Roorkee
         </p>
       </div>
     </div>

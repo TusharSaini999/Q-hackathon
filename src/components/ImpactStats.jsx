@@ -5,7 +5,7 @@ import { motion, useInView, animate } from "framer-motion";
 const stats = [
   { Icon: Users,         to: 300, suffix: "+", label: "Participants"         },
   { Icon: Laptop,        to: 60,  suffix: "+", label: "Diverse Teams"        },
-  { Icon: Timer,         to: 36,  suffix: "",  label: "Hours of Hacking"     },
+  { Icon: Timer,         to: 36,  suffix: "",  label: "Hours of Innovation"     },
   { Icon: GraduationCap, to: 10,  suffix: "+", label: "Colleges Represented" },
 ];
 const AnimatedCounter = ({ to, suffix }) => {

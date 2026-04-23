@@ -54,6 +54,10 @@
   --border: var(--neutral-200);
   --border-soft: rgba(255, 255, 255, 0.14);
 
+  --text-heading: #ffffff;
+  --footer-icon-bg: rgba(255, 255, 255, 0.07);
+  --footer-icon-border: rgba(255, 255, 255, 0.14);
+
   --success: #22c55e;
   --warning: #f59e0b;
   --danger: #ef4444;
@@ -135,6 +139,10 @@ html.light {
   --border: #d8dceb;
   --border-soft: rgba(11, 17, 32, 0.18);
 
+  --text-heading: #141522;
+  --footer-icon-bg: rgba(11, 17, 32, 0.08);
+  --footer-icon-border: rgba(11, 17, 32, 0.2);
+
   --bg-orb-1: rgba(229, 26, 128, 0.13);
   --bg-orb-2: rgba(140, 46, 124, 0.1);
   --bg-base-1: #ffffff;
@@ -196,16 +204,26 @@ body {
   margin: 0;
   font-family: var(--font-family-base);
   color: var(--text-body);
-  background:
-    radial-gradient(900px 520px at 85% 8%, var(--bg-orb-1), transparent 70%),
+  background: radial-gradient(
+      900px 520px at 85% 8%,
+      var(--bg-orb-1),
+      transparent 70%
+    ),
     radial-gradient(800px 420px at 10% 70%, var(--bg-orb-2), transparent 72%),
-    linear-gradient(180deg, var(--bg-base-1) 0%, var(--bg-base-2) 48%, var(--bg-base-2) 100%);
+    linear-gradient(
+      180deg,
+      var(--bg-base-1) 0%,
+      var(--bg-base-2) 48%,
+      var(--bg-base-2) 100%
+    );
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  color: inherit;
+@layer base {
+  a {
+    color: inherit;
+  }
 }
 
 .section-heading {
@@ -230,7 +248,8 @@ a {
   border: 2px solid transparent;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  transition: background-color 0.25s ease, color 0.25s ease,
+    border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .btn-ui:focus-visible {
@@ -248,7 +267,8 @@ a {
 .btn-ui-primary {
   background: var(--btn-primary-bg);
   color: var(--btn-primary-text);
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--btn-primary-bg) 35%, transparent);
+  box-shadow: 0 6px 18px
+    color-mix(in srgb, var(--btn-primary-bg) 35%, transparent);
 }
 
 .btn-ui-primary:hover {
@@ -288,8 +308,14 @@ a {
 
 .btn-ui-view-tracks:hover {
   background: var(--btn-view-tracks-hover-bg, var(--btn-secondary-hover-bg));
-  border-color: var(--btn-view-tracks-hover-border, var(--btn-secondary-hover-border));
-  color: var(--btn-view-tracks-hover-text, var(--btn-view-tracks-text, var(--btn-secondary-text)));
+  border-color: var(
+    --btn-view-tracks-hover-border,
+    var(--btn-secondary-hover-border)
+  );
+  color: var(
+    --btn-view-tracks-hover-text,
+    var(--btn-view-tracks-text, var(--btn-secondary-text))
+  );
 }
 
 html.dark {
@@ -398,6 +424,3 @@ html.dark .roadmap-card-eval-title {
 html.dark .roadmap-card-eval-item {
   color: var(--text-muted);
 }
-
-
-

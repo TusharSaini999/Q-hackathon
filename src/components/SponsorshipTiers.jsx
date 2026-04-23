@@ -1,9 +1,10 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { Check, Star } from "lucide-react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Sparkles, Float } from "@react-three/drei";
 import { usePerformanceMode } from "../utils/usePerformanceMode";
+import { useTheme } from "../context/ThemeContext";
 const tiers = [
   {
     name: "Platinum",
@@ -11,7 +12,7 @@ const tiers = [
     badge: "MOST IMPACT",
     color: "#e51a80",
     glow: "rgba(229, 26, 128, 0.2)",
-    scale: "scale-105 z-20", 
+    scale: "scale-105 z-20",
     features: [
       "Largest logo on homepage",
       "Main stage backdrop branding",
@@ -46,8 +47,8 @@ const tiers = [
   {
     name: "Silver",
     price: "₹15,000 – ₹25,000",
-    color: "#e5e7eb", 
-    glow: "rgba(255, 255, 255, 0.05)",
+    color: { dark: "#c0c0c0", light: "#6b7280" },
+    glow: { dark: "rgba(192, 192, 192, 0.10)", light: "rgba(107, 114, 128, 0.12)" },
     scale: "scale-95 z-0 opacity-90 hover:opacity-100",
     features: [
       "Logo on website & banners",
@@ -62,7 +63,7 @@ const tiers = [
   {
     name: "Bronze",
     price: "₹5,000 – ₹10,000",
-    color: "#d97706", 
+    color: "#d97706",
     glow: "rgba(217, 119, 6, 0.05)",
     scale: "scale-95 z-0 opacity-90 hover:opacity-100",
     features: [
@@ -102,7 +103,7 @@ const BackgroundNetwork = () => {
 };
 const TierCard = ({ tier, index }) => {
   const isPlatinum = tier.name === "Platinum";
-  
+
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const mouseXSpring = useSpring(x, { stiffness: 150, damping: 15 });
@@ -130,18 +131,18 @@ const TierCard = ({ tier, index }) => {
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         className="relative w-full flex flex-col h-full bg-(--bg-card-dark) rounded-2xl border border-(--border-soft) p-8 shadow-2xl group transition-colors duration-300"
       >
-        <div 
+        <div
           className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none blur-xl"
           style={{ background: `radial-gradient(circle at top, ${tier.glow} 0%, transparent 70%)` }}
         />
-        <div 
-          className="absolute top-0 inset-x-0 h-1.5 rounded-t-2xl opacity-80 group-hover:opacity-100 transition-opacity" 
-          style={{ background: tier.color, boxShadow: `0 0 15px ${tier.color}` }} 
+        <div
+          className="absolute top-0 inset-x-0 h-1.5 rounded-t-2xl opacity-80 group-hover:opacity-100 transition-opacity"
+          style={{ background: tier.color, boxShadow: `0 0 15px ${tier.color}` }}
         />
         <div style={{ transform: "translateZ(30px)" }} className="flex flex-col h-full relative z-10">
-             {tier.badge && (
+          {tier.badge && (
             <div className="absolute -top-12 left-1/2 -translate-x-1/2">
-              <span 
+              <span
                 className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-b-lg text-(--text-inverse) shadow-lg"
                 style={{ background: tier.color }}
               >
@@ -175,7 +176,7 @@ const TierCard = ({ tier, index }) => {
             target="_blank"
             rel="noreferrer"
             className={`btn-ui mt-auto w-full py-3.5 rounded-xl text-sm text-center ${isPlatinum ? "btn-ui-primary" : "btn-ui-outline"}`}
-            style={{ 
+            style={{
               borderColor: isPlatinum ? tier.color : 'var(--border-soft)',
               background: isPlatinum ? tier.color : 'var(--btn-outline-bg)',
               color: isPlatinum ? 'var(--text-inverse)' : 'var(--btn-outline-text)'
@@ -204,10 +205,23 @@ const TierCard = ({ tier, index }) => {
 };
 const SponsorshipTiers = () => {
   const { shouldReduceMotion } = usePerformanceMode();
+  const { theme } = useTheme();
+  const isLight = theme === "light";
+
+  // Resolve theme-aware colors for tiers that need them (Silver)
+  const resolvedTiers = useMemo(
+    () =>
+      tiers.map((t) => ({
+        ...t,
+        color: typeof t.color === "object" ? (isLight ? t.color.light : t.color.dark) : t.color,
+        glow: typeof t.glow === "object" ? (isLight ? t.glow.light : t.glow.dark) : t.glow,
+      })),
+    [isLight]
+  );
 
   return (
     <section id="sponsorship-tiers" className="relative py-24 sm:py-32 px-4 sm:px-6 bg-(--bg-page-elevated) overflow-hidden">
-      
+
       {/*background canvas */}
       {shouldReduceMotion ? (
         <div className="absolute inset-0 z-0 pointer-events-none opacity-60 bg-[radial-gradient(circle_at_20%_20%,var(--primary-soft)_0%,transparent_45%),radial-gradient(circle_at_80%_25%,rgba(245,196,0,0.12)_0%,transparent_40%)]" />
@@ -224,7 +238,7 @@ const SponsorshipTiers = () => {
       )}
 
       <div className="relative z-10 max-w-7xl mx-auto">
-        
+
         {/*header*/}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -241,7 +255,7 @@ const SponsorshipTiers = () => {
 
         {/*tier grids*/}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-center">
-          {tiers.map((tier, i) => (
+          {resolvedTiers.map((tier, i) => (
             <TierCard key={tier.name} tier={tier} index={i} />
           ))}
         </div>

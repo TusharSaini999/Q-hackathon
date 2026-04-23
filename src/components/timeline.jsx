@@ -1,9 +1,9 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { 
   ClipboardList, ClipboardX, PartyPopper, ScanSearch, 
-  Trophy, CheckCircle2, Target, BookOpen 
+  Trophy, CheckCircle2, Target, BookOpen, ChevronDown 
 } from "lucide-react";
-import { motion, useScroll, useSpring, useMotionValue, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring, useMotionValue, useTransform } from "framer-motion";
 
 const events = [
   {
@@ -11,7 +11,7 @@ const events = [
     title: "Registration Opens",
     description: "Secure your spot and start forming your dream team.",
     instructions: [
-      "Register individually or as a team of 2-4 members.",
+      "Register individually or as a team of 4-6 members.",
       "Finalize tech stack and brainstorm core problem statements.",
       "Early preparation is encouraged for a smoother dev phase."
     ],
@@ -34,8 +34,7 @@ const events = [
     description: "Keynote speeches, track reveals, and the 36-hour hack begins!",
     instructions: [
       "Welcome address and keynote sessions.",
-      "Hackathon rules and judging criteria explained.",
-      "Problem tracks officially revealed — Timer starts!"
+      "Hackathon rules and judging criteria explained."
     ],
     Icon: PartyPopper,
   },
@@ -82,6 +81,8 @@ const events = [
 ];
 
 const PipelineCard = ({ title, description, instructions, deliverables, evaluation, Icon }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const mouseXSpring = useSpring(x, { stiffness: 150, damping: 15 });
@@ -95,6 +96,8 @@ const PipelineCard = ({ title, description, instructions, deliverables, evaluati
     y.set((e.clientY - rect.top) / rect.height - 0.5);
   };
 
+  const hasDetails = instructions || deliverables || evaluation;
+
   return (
     <motion.div
       style={{ perspective: 1000 }}
@@ -104,55 +107,84 @@ const PipelineCard = ({ title, description, instructions, deliverables, evaluati
     >
       <motion.div
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        className="roadmap-card relative overflow-hidden rounded-2xl border shadow-sm hover:shadow-lg p-6 sm:p-7 transition-all duration-500 text-left"
+        onClick={() => setIsOpen(!isOpen)}
+        className="roadmap-card relative overflow-hidden rounded-2xl border shadow-sm hover:shadow-lg p-6 sm:p-7 transition-all duration-500 text-left cursor-pointer bg-white"
       >
         <div className="flex items-start gap-4" style={{ transform: "translateZ(30px)" }}>
-          <div className="roadmap-card-icon shrink-0 w-12 h-12 rounded-xl flex items-center justify-center shadow-inner">
+          <div className="roadmap-card-icon shrink-0 w-12 h-12 rounded-xl flex items-center justify-center shadow-inner" style={{ background: "var(--secondary)" }}>
             <Icon size={24} className="text-(--primary)" strokeWidth={2.5} />
           </div>
-          <div className="flex-1">
-            <h3 className="roadmap-card-title text-lg sm:text-xl font-black mb-1">{title}</h3>
-            <p className="roadmap-card-desc text-sm font-medium mb-4">{description}</p>
-            
-            {/* Details are now permanently visible */}
-            <div className="roadmap-card-divider space-y-4 border-t pt-4 mt-2">
-              {instructions && (
-                  <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-(--primary) font-bold text-xs uppercase tracking-tighter">
-                    <BookOpen size={14} /> Guidelines
-                  </div>
-                  {instructions.map((item, i) => (
-                    <div key={i} className="roadmap-card-detail flex gap-2 text-xs sm:text-sm">
-                      <CheckCircle2 size={14} className="shrink-0 mt-0.5 text-green-500" /> {item}
-                    </div>
-                  ))}
-                  </div>
-              )}
-              {deliverables && (
-                  <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-blue-600 font-bold text-xs uppercase tracking-tighter">
-                    <Target size={14} /> Deliverables
-                  </div>
-                  {deliverables.map((item, i) => (
-                    <div key={i} className="roadmap-card-detail flex gap-2 text-xs sm:text-sm italic">
-                      • {item}
-                    </div>
-                  ))}
-                  </div>
-              )}
-              {evaluation && (
-                  <div className="roadmap-card-eval p-3 border shadow-sm rounded-lg space-y-2 mt-2">
-                  <div className="roadmap-card-eval-title font-bold text-xs uppercase tracking-tighter flex items-center gap-2">
-                    <ScanSearch size={14} /> Evaluation Criteria
-                  </div>
-                  {evaluation.map((item, i) => (
-                    <div key={i} className="roadmap-card-eval-item text-xs sm:text-sm flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-(--primary) shrink-0" /> {item}
-                    </div>
-                  ))}
-                  </div>
+          
+          <div className="flex-1 w-full">
+            <div className="flex justify-between items-start gap-3">
+              <div>
+                <h3 className="roadmap-card-title text-lg sm:text-xl font-black mb-1">{title}</h3>
+                <p className="roadmap-card-desc text-sm font-medium text-(--text-muted)">{description}</p>
+              </div>
+              
+              {hasDetails && (
+                <motion.div 
+                  animate={{ rotate: isOpen ? 180 : 0 }} 
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  className="shrink-0 mt-1 p-1 rounded-full bg-(--bg-light) text-(--primary)"
+                >
+                  <ChevronDown size={20} />
+                </motion.div>
               )}
             </div>
+            
+            {/* Smooth height accordion for details */}
+            <AnimatePresence>
+              {isOpen && hasDetails && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ opacity: { duration: 0.2 }, height: { type: "spring", stiffness: 100, damping: 15 } }}
+                  className="overflow-hidden"
+                >
+                  <div className="roadmap-card-divider space-y-4 border-t pt-4 mt-4">
+                    {instructions && (
+                        <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-(--primary) font-bold text-xs uppercase tracking-tighter">
+                          <BookOpen size={14} /> Guidelines
+                        </div>
+                        {instructions.map((item, i) => (
+                          <div key={i} className="roadmap-card-detail flex gap-2 text-xs sm:text-sm text-(--text-dark)">
+                            <CheckCircle2 size={14} className="shrink-0 mt-0.5 text-green-500" /> {item}
+                          </div>
+                        ))}
+                        </div>
+                    )}
+                    {deliverables && (
+                        <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-blue-600 font-bold text-xs uppercase tracking-tighter">
+                          <Target size={14} /> Deliverables
+                        </div>
+                        {deliverables.map((item, i) => (
+                          <div key={i} className="roadmap-card-detail flex gap-2 text-xs sm:text-sm italic text-(--text-dark)">
+                            • {item}
+                          </div>
+                        ))}
+                        </div>
+                    )}
+                    {evaluation && (
+                        <div className="roadmap-card-eval p-3 border shadow-sm rounded-lg space-y-2 mt-2 bg-(--bg-card-dark)">
+                        <div className="roadmap-card-eval-title font-bold text-xs uppercase tracking-tighter flex items-center gap-2">
+                          <ScanSearch size={14} /> Evaluation Criteria
+                        </div>
+                        {evaluation.map((item, i) => (
+                          <div key={i} className="roadmap-card-eval-item text-xs sm:text-sm flex items-center gap-2 text-(--text-dark)">
+                            <div className="w-1.5 h-1.5 rounded-full bg-(--primary) shrink-0" /> {item}
+                          </div>
+                        ))}
+                        </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            
           </div>
         </div>
       </motion.div>
@@ -178,15 +210,15 @@ const Timeline = () => {
           className="text-center mb-24"
         >
           <h2 className="section-heading mb-4 text-4xl sm:text-5xl font-black tracking-tight">Event Roadmap</h2>
-          <div className="h-1.5 w-24 rounded-full mx-auto bg-linear-to-r from-(--primary) to-(--secondary)" />
+          <div className="h-1.5 w-24 rounded-full mx-auto" style={{ background: "linear-gradient(90deg, var(--primary), var(--secondary))" }} />
           <p className="mt-4 text-(--text-muted) font-medium">Detailed schedule, deliverables, and expectations.</p>
         </motion.div>
 
         <div className="relative">
           <div className="absolute top-0 bottom-0 left-7 md:left-1/2 md:-translate-x-1/2 w-1 rounded-full bg-(--border-soft)" />
                     <motion.div 
-            className="absolute top-0 bottom-0 left-7 md:left-1/2 md:-translate-x-1/2 w-1 rounded-full origin-top bg-(--primary) shadow-[0_0_15px_rgba(140,46,124,0.6)]"
-            style={{ scaleY }}
+            className="absolute top-0 bottom-0 left-7 md:left-1/2 md:-translate-x-1/2 w-1 rounded-full origin-top shadow-[0_0_15px_rgba(140,46,124,0.6)]"
+            style={{ scaleY, background: "var(--primary)" }}
           />
 
           <div className="relative z-10 space-y-16">
@@ -201,17 +233,17 @@ const Timeline = () => {
                   viewport={{ once: true, margin: "-100px" }}
                   className="relative flex flex-col md:flex-row items-start w-full"
                 >
-                  <div className="absolute left-7 md:left-1/2 md:-translate-x-1/2 top-0 md:top-6 w-5 h-5 rounded-full border-4 border-(--bg-light) bg-(--primary) z-20 shadow-lg -ml-2.5" />
+                  <div className="absolute left-7 md:left-1/2 md:-translate-x-1/2 top-0 md:top-6 w-5 h-5 rounded-full border-4 z-20 shadow-lg -ml-2.5" style={{ borderColor: "var(--bg-light)", background: "var(--primary)" }} />
 
                   <div className="md:hidden w-full pl-16">
-                    <span className="block mb-2 text-sm font-black uppercase tracking-widest text-(--primary)">{evt.date}</span>
+                    <span className="block mb-2 text-sm font-black uppercase tracking-widest" style={{ color: "var(--primary)" }}>{evt.date}</span>
                     <PipelineCard {...evt} />
                   </div>
                   <div className="hidden md:flex w-full">
                     {isEven ? (
                       <>
                         <div className="w-1/2 pr-16 flex flex-col items-end">
-                          <span className="block mb-3 text-sm font-black uppercase tracking-widest text-(--primary)">{evt.date}</span>
+                          <span className="block mb-3 text-sm font-black uppercase tracking-widest" style={{ color: "var(--primary)" }}>{evt.date}</span>
                           <div className="w-full max-w-lg">
                             <PipelineCard {...evt} />
                           </div>
@@ -222,7 +254,7 @@ const Timeline = () => {
                       <>
                         <div className="w-1/2 pr-16"></div>
                         <div className="w-1/2 pl-16 flex flex-col items-start">
-                          <span className="block mb-3 text-sm font-black uppercase tracking-widest text-(--primary)">{evt.date}</span>
+                          <span className="block mb-3 text-sm font-black uppercase tracking-widest" style={{ color: "var(--primary)" }}>{evt.date}</span>
                           <div className="w-full max-w-lg">
                             <PipelineCard {...evt} />
                           </div>
