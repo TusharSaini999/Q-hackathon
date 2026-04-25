@@ -95,7 +95,7 @@ const PrizeCard = ({ tier, Icon, label, amount, perks, accentColor, bgGradient, 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.7, delay: index * 0.15, ease: "easeOut" }}
-      className={`w-full max-w-sm mx-auto flex ${desktopOrder}`}
+      className={`w-full max-w-sm mx-auto flex ${desktopOrder} relative z-10`}
       style={{ perspective: 1000, willChange: "transform", zIndex: isGold ? 20 : 10 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { x.set(0); y.set(0); }}
@@ -186,7 +186,7 @@ const Prizes = () => {
             <span className="text-xl sm:text-2xl font-black text-(--primary)">₹1,50,000+ Worth</span>
           </div>
         </motion.div>
-        <div className="flex flex-col md:flex-row items-center md:items-end justify-center gap-6 md:gap-4 lg:gap-8 mb-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-4 lg:gap-8 mb-24 relative z-10 justify-items-center">
           {prizes.map((prize, i) => (
             <PrizeCard key={prize.tier} {...prize} index={i} />
           ))}
@@ -201,7 +201,7 @@ const Prizes = () => {
             Perks for Everyone
           </h3>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 sm:gap-10 relative z-10">
             {generalPerks.map((perk, i) => (
               <motion.div 
                 key={perk.title}
@@ -209,7 +209,7 @@ const Prizes = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 + (i * 0.1) }}
-                className="flex flex-col items-center text-center p-6 rounded-2xl border border-(--border-soft) bg-(--bg-card-dark) backdrop-blur-md shadow-sm hover:bg-(--bg-card-dark) hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+                className={`flex flex-col items-center text-center p-6 rounded-2xl border border-(--border-soft) bg-(--bg-card-dark) backdrop-blur-md shadow-sm hover:bg-(--bg-card-dark) hover:shadow-md hover:-translate-y-1 transition-all duration-300 lg:col-span-2 ${i === 3 ? 'lg:col-start-2' : ''}`}
               >
                 <div 
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
